@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>AIJA Workshop Registration</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #1C2B4A;
+      --navy-light: #2A3D6B;
+      --gold: #C9A84C;
+      --gold-bg: #FBF5E6;
+      --aija-red: #E8192C;
+      --bg: #F0EDE8;
+      --card: #FFFFFF;
+      --text: #1A1A1A;
+      --muted: #6B7280;
+      --border: #E0DAD0;
+      --rank2: #4A6FA5;
+      --rank2-bg: #EEF2FA;
+      --rank3-bg: #F5F5F5;
+      --error-bg: #FEE2E2;
+      --error: #B91C1C;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Logo bar ── */
+    .logo-bar {
+      background: #FFFFFF;
+      padding: 14px 20px;
+      text-align: center;
+      border-bottom: 3px solid var(--aija-red);
+    }
+    .logo-bar img {
+      height: 56px;
+      width: auto;
+    }
+
+    /* ── Header ── */
+    .header {
+      background: var(--navy);
+      padding: 20px 20px 18px;
+      text-align: center;
+    }
+    .header-eyebrow {
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+    .header h1 {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #FFFFFF;
+      letter-spacing: 0.2px;
+      line-height: 1.3;
+    }
+    .header .workshop-subtitle {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.5);
+      margin-top: 5px;
+      line-height: 1.5;
+    }
+    .header .form-hint {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.38);
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    /* ── Layout ── */
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 20px 16px 40px;
+    }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--card);
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 14px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    }
+    .card-label {
+      font-size: 0.68rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--gold);
+      margin-bottom: 14px;
+    }
+
+    /* ── Radio options ── */
+    .radio-group { display: flex; flex-direction: column; gap: 8px; }
+
+    .radio-option {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .radio-option:active { background: var(--gold-bg); }
+    .radio-option.selected {
+      border-color: var(--navy);
+      background: #EEF1F8;
+    }
+    .radio-option input[type="radio"] {
+      accent-color: var(--navy);
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      pointer-events: none;
+    }
+    .radio-option label {
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      flex: 1;
+      pointer-events: none;
+    }
+
+    /* ── Theme ranking ── */
+    .theme-hint {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 14px;
+      line-height: 1.5;
+    }
+    .theme-cards { display: flex; flex-direction: column; gap: 10px; }
+
+    .theme-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 15px 14px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    .theme-card:active { opacity: 0.85; }
+
+    .theme-card.rank-1 { border-color: var(--gold); background: var(--gold-bg); }
+    .theme-card.rank-2 { border-color: var(--rank2); background: var(--rank2-bg); }
+    .theme-card.rank-3 { border-color: #C5C5C5; background: var(--rank3-bg); opacity: 0.75; }
+
+    .rank-badge {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      font-weight: 800;
+      flex-shrink: 0;
+      border: 2px solid var(--border);
+      color: var(--muted);
+      background: white;
+      transition: all 0.2s;
+    }
+    .theme-card.rank-1 .rank-badge { background: var(--gold); border-color: var(--gold); color: white; }
+    .theme-card.rank-2 .rank-badge { background: var(--rank2); border-color: var(--rank2); color: white; }
+    .theme-card.rank-3 .rank-badge { background: #9CA3AF; border-color: #9CA3AF; color: white; }
+
+    .theme-text { flex: 1; }
+    .theme-name { font-size: 0.9rem; font-weight: 600; line-height: 1.35; }
+    .rank-sublabel { font-size: 0.72rem; color: var(--muted); margin-top: 3px; }
+    .rank-1 .rank-sublabel { color: #A0742A; }
+    .rank-2 .rank-sublabel { color: var(--rank2); }
+    .rank-3 .rank-sublabel { color: #9CA3AF; font-style: italic; }
+
+    /* ── Submit ── */
+    .submit-btn {
+      width: 100%;
+      padding: 17px;
+      background: var(--navy);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .submit-btn:active { transform: scale(0.98); }
+    .submit-btn:hover { background: var(--navy-light); }
+    .submit-btn:disabled { background: #9CA3AF; cursor: not-allowed; transform: none; }
+
+    .error-msg {
+      background: var(--error-bg);
+      color: var(--error);
+      padding: 13px 16px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-bottom: 12px;
+      display: none;
+    }
+
+    .spinner-wrap {
+      display: none;
+      justify-content: center;
+      padding: 10px 0 14px;
+    }
+    .spinner {
+      width: 26px; height: 26px;
+      border: 3px solid #E5E7EB;
+      border-top-color: var(--navy);
+      border-radius: 50%;
+      animation: spin 0.75s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .footer {
+      text-align: center;
+      padding: 24px 0 0;
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.5px;
+    }
+
+    /* ── Result page ── */
+    #result-page { display: none; }
+
+    .result-card {
+      background: var(--navy);
+      border-radius: 20px;
+      padding: 36px 24px 32px;
+      text-align: center;
+      margin-bottom: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+    .result-card::before {
+      content: '';
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 180px; height: 180px;
+      border-radius: 50%;
+      background: rgba(201,168,76,0.08);
+    }
+    .result-card::after {
+      content: '';
+      position: absolute;
+      bottom: -60px; left: -30px;
+      width: 200px; height: 200px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.03);
+    }
+
+    .result-eyebrow {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+      margin-bottom: 10px;
+    }
+    .result-group-number {
+      font-size: 6rem;
+      font-weight: 900;
+      color: var(--gold);
+      line-height: 1;
+      letter-spacing: -2px;
+      animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+    @keyframes popIn {
+      from { transform: scale(0.6); opacity: 0; }
+      to   { transform: scale(1);   opacity: 1; }
+    }
+    .result-group-label {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.5);
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    .result-divider {
+      width: 40px; height: 1px;
+      background: rgba(201,168,76,0.35);
+      margin: 22px auto 18px;
+    }
+
+    .result-sessions-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 12px;
+    }
+    .theme-pill {
+      display: inline-block;
+      background: rgba(201,168,76,0.15);
+      color: var(--gold);
+      border: 1.5px solid rgba(201,168,76,0.4);
+      padding: 8px 16px;
+      border-radius: 100px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin: 5px 4px;
+      line-height: 1.3;
+    }
+
+    .result-info-card {
+      background: var(--card);
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    }
+    .result-info-card h3 {
+      font-size: 0.68rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--gold);
+      margin-bottom: 10px;
+    }
+    .result-info-card p {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+  </style>
+</head>
+<body>
+
+<div class="logo-bar">
+  <img src="/aija-logo.png" alt="AIJA — International Association of Young Lawyers">
+</div>
+
+<div class="header">
+  <div class="header-eyebrow">Workshop Registration</div>
+  <h1>Untangling the Orchestra</h1>
+  <p class="workshop-subtitle">Procedural and Substantive Battles in a Cross Border Supply Chain Dispute</p>
+  <p class="form-hint">Please answer all questions to receive your group assignment</p>
+</div>
+
+<!-- ═══ FORM PAGE ═══ -->
+<div id="form-page">
+  <div class="container">
+
+    <!-- Gender -->
+    <div class="card">
+      <div class="card-label">Gender</div>
+      <div class="radio-group">
+        <div class="radio-option" onclick="pick('gender','male',this)">
+          <input type="radio" name="gender" value="male">
+          <label>Male</label>
+        </div>
+        <div class="radio-option" onclick="pick('gender','female',this)">
+          <input type="radio" name="gender" value="female">
+          <label>Female</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Commission -->
+    <div class="card">
+      <div class="card-label">Your Commission</div>
+      <div class="radio-group">
+        <div class="radio-option" onclick="pick('commission','Litigation',this)">
+          <input type="radio" name="commission" value="Litigation">
+          <label>Litigation</label>
+        </div>
+        <div class="radio-option" onclick="pick('commission','Arbitration',this)">
+          <input type="radio" name="commission" value="Arbitration">
+          <label>Arbitration</label>
+        </div>
+        <div class="radio-option" onclick="pick('commission','T.R.AD.E.',this)">
+          <input type="radio" name="commission" value="T.R.AD.E.">
+          <label>T.R.AD.E.</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Theme Preferences -->
+    <div class="card">
+      <div class="card-label">Theme Preferences</div>
+      <p class="theme-hint">Tap the themes in order of preference — most preferred first. Your top two choices determine your group.</p>
+      <div class="theme-cards">
+        <div class="theme-card" id="card-FM" onclick="rankTheme('FM')">
+          <div class="rank-badge" id="badge-FM">—</div>
+          <div class="theme-text">
+            <div class="theme-name">Force Majeure / Hardship Defenses</div>
+            <div class="rank-sublabel" id="sub-FM">Tap to select</div>
+          </div>
+        </div>
+        <div class="theme-card" id="card-AC" onclick="rankTheme('AC')">
+          <div class="rank-badge" id="badge-AC">—</div>
+          <div class="theme-text">
+            <div class="theme-name">Asymmetrical Clauses</div>
+            <div class="rank-sublabel" id="sub-AC">Tap to select</div>
+          </div>
+        </div>
+        <div class="theme-card" id="card-IM" onclick="rankTheme('IM')">
+          <div class="rank-badge" id="badge-IM">—</div>
+          <div class="theme-text">
+            <div class="theme-name">Interim Measures</div>
+            <div class="rank-sublabel" id="sub-IM">Tap to select</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Legal System -->
+    <div class="card">
+      <div class="card-label">Your Legal System</div>
+      <div class="radio-group">
+        <div class="radio-option" onclick="pick('commonLaw','yes',this)">
+          <input type="radio" name="commonLaw" value="yes">
+          <label>Common Law country</label>
+        </div>
+        <div class="radio-option" onclick="pick('commonLaw','no',this)">
+          <input type="radio" name="commonLaw" value="no">
+          <label>Civil Law country</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="error-msg" id="error-msg"></div>
+    <div class="spinner-wrap" id="spinner"><div class="spinner"></div></div>
+    <button class="submit-btn" id="submit-btn" onclick="submitForm()">Confirm &amp; Get My Group →</button>
+    <div class="footer">AIJA Workshop</div>
+  </div>
+</div>
+
+<!-- ═══ RESULT PAGE ═══ -->
+<div id="result-page">
+  <div class="container">
+    <div class="result-card">
+      <div class="result-eyebrow">You have been assigned to</div>
+      <div class="result-group-number" id="res-number">—</div>
+      <div class="result-group-label">Group <span id="res-label"></span></div>
+    </div>
+
+    <div class="result-info-card">
+      <h3>What to do next</h3>
+      <p>Please head to the room assigned to your group. You will attend two 30-minute sessions covering the themes listed above. Enjoy the workshop!</p>
+    </div>
+
+    <div class="footer">AIJA Workshop</div>
+  </div>
+</div>
+
+<script>
+  const THEMES = ['FM', 'AC', 'IM'];
+  const answers = { gender: null, commission: null, commonLaw: null };
+  const ranking = []; // up to 2 manually selected; 3rd is auto
+
+  function pick(field, value, el) {
+    el.closest('.radio-group').querySelectorAll('.radio-option').forEach(o => {
+      o.classList.remove('selected');
+      o.querySelector('input').checked = false;
+    });
+    el.classList.add('selected');
+    el.querySelector('input').checked = true;
+    answers[field] = value;
+  }
+
+  function getAuto3rd() {
+    return ranking.length === 2 ? THEMES.find(t => !ranking.includes(t)) : null;
+  }
+
+  function rankTheme(id) {
+    const idx = ranking.indexOf(id);
+    const auto = getAuto3rd();
+
+    if (idx >= 0) {
+      // Remove from this position onward (allows undoing)
+      ranking.splice(idx);
+    } else if (id === auto) {
+      // Swap auto-3rd with current 2nd choice
+      ranking[1] = id;
+    } else if (ranking.length < 2) {
+      ranking.push(id);
+    }
+    renderThemes();
+  }
+
+  function renderThemes() {
+    const auto = getAuto3rd();
+    THEMES.forEach(t => {
+      const card  = document.getElementById('card-' + t);
+      const badge = document.getElementById('badge-' + t);
+      const sub   = document.getElementById('sub-' + t);
+      const idx   = ranking.indexOf(t);
+      const isAuto = t === auto;
+
+      card.classList.remove('rank-1', 'rank-2', 'rank-3');
+
+      if (idx === 0) {
+        card.classList.add('rank-1');
+        badge.textContent = '1';
+        sub.textContent   = '1st choice — tap to reset';
+      } else if (idx === 1) {
+        card.classList.add('rank-2');
+        badge.textContent = '2';
+        sub.textContent   = '2nd choice — tap to change';
+      } else if (isAuto) {
+        card.classList.add('rank-3');
+        badge.textContent = '3';
+        sub.textContent   = '3rd choice (automatic) — tap to swap with 2nd';
+      } else {
+        badge.textContent = '—';
+        sub.textContent   = ranking.length === 0
+          ? 'Tap to select as 1st choice'
+          : 'Tap to select as 2nd choice';
+      }
+    });
+  }
+
+  function fullRanking() {
+    if (ranking.length < 2) return null;
+    return [...ranking, getAuto3rd()];
+  }
+
+  async function submitForm() {
+    const errEl = document.getElementById('error-msg');
+    const fr = fullRanking();
+
+    if (!answers.gender || !answers.commission || !answers.commonLaw || !fr) {
+      errEl.style.display = 'block';
+      errEl.textContent = 'Please answer all questions before submitting.';
+      return;
+    }
+
+    errEl.style.display = 'none';
+    document.getElementById('submit-btn').disabled = true;
+    document.getElementById('spinner').style.display = 'flex';
+
+    try {
+      const res = await fetch('/api/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          gender: answers.gender,
+          commission: answers.commission,
+          themeRanking: fr,
+          commonLaw: answers.commonLaw,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Submission failed. Please try again.');
+
+      showResult(data);
+    } catch (e) {
+      errEl.style.display = 'block';
+      errEl.textContent = e.message || 'Connection error. Please try again.';
+      document.getElementById('submit-btn').disabled = false;
+    } finally {
+      document.getElementById('spinner').style.display = 'none';
+    }
+  }
+
+  function showResult(data) {
+    document.getElementById('form-page').style.display = 'none';
+    const rp = document.getElementById('result-page');
+    rp.style.display = 'block';
+    document.getElementById('res-number').textContent = data.groupId;
+    document.getElementById('res-label').textContent  = data.groupId;
+    document.getElementById('res-pills').innerHTML =
+      data.themes.map(t => `<span class="theme-pill">${t}</span>`).join('');
+    window.scrollTo(0, 0);
+  }
+</script>
+
+</body>
+</html>

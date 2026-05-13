@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — AIJA Workshop</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #1C2B4A;
+      --navy-light: #2A3D6B;
+      --gold: #C9A84C;
+      --gold-bg: #FBF5E6;
+      --aija-red: #E8192C;
+      --bg: #F0EDE8;
+      --card: #FFFFFF;
+      --text: #1A1A1A;
+      --muted: #6B7280;
+      --border: #E0DAD0;
+      --green: #059669;
+      --green-bg: #ECFDF5;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Logo bar ── */
+    .logo-bar {
+      background: #FFFFFF;
+      padding: 12px 24px;
+      text-align: center;
+      border-bottom: 3px solid var(--aija-red);
+    }
+    .logo-bar img { height: 48px; width: auto; }
+
+    /* ── Header ── */
+    .header {
+      background: var(--navy);
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .header-left h1 { font-size: 1.1rem; font-weight: 700; color: #fff; }
+    .header-left p  { font-size: 0.72rem; color: rgba(255,255,255,0.45); margin-top: 3px; letter-spacing: 0.5px; }
+
+    .live-badge {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(5,150,105,0.2);
+      border: 1px solid rgba(5,150,105,0.4);
+      border-radius: 100px;
+      padding: 5px 12px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #6EE7B7;
+      white-space: nowrap;
+    }
+    .live-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: #34D399;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.3; }
+    }
+
+    /* ── Layout ── */
+    .page { max-width: 960px; margin: 0 auto; padding: 24px 20px 48px; }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 680px) { .grid-2 { grid-template-columns: 1fr; } }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--card);
+      border-radius: 14px;
+      padding: 22px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+      margin-bottom: 16px;
+    }
+    .card-title {
+      font-size: 0.68rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+
+    /* ── QR section ── */
+    .qr-section {
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+    #qr-box {
+      background: #fff;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      flex-shrink: 0;
+      min-width: 160px;
+      min-height: 160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: 0.8rem;
+      text-align: center;
+    }
+    .qr-controls { flex: 1; min-width: 200px; }
+    .qr-controls label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .url-row { display: flex; gap: 8px; }
+    .url-input {
+      flex: 1;
+      padding: 10px 12px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-family: monospace;
+      color: var(--text);
+      background: #FAFAF8;
+      outline: none;
+    }
+    .url-input:focus { border-color: var(--navy); }
+    .btn {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.15s;
+    }
+    .btn-navy { background: var(--navy); color: white; }
+    .btn-navy:hover { background: var(--navy-light); }
+    .btn-gold { background: var(--gold); color: white; }
+    .btn-gold:hover { background: #b8943e; }
+    .btn-danger { background: #DC2626; color: white; }
+    .btn-danger:hover { background: #b91c1c; }
+    .btn-outline {
+      background: transparent;
+      color: var(--navy);
+      border: 1.5px solid var(--navy);
+    }
+    .btn-outline:hover { background: #EEF1F8; }
+
+    .qr-hint {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 12px;
+      line-height: 1.5;
+    }
+    .qr-hint strong { color: var(--text); }
+
+    /* ── Total counter ── */
+    .total-box {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .total-number {
+      font-size: 3rem;
+      font-weight: 900;
+      color: var(--navy);
+      line-height: 1;
+    }
+    .total-label { font-size: 0.85rem; color: var(--muted); }
+    .total-max { font-size: 0.8rem; color: var(--muted); }
+
+    /* ── Progress bar ── */
+    .progress-bar-wrap {
+      background: #F3F0EB;
+      border-radius: 100px;
+      height: 8px;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 100px;
+      background: linear-gradient(90deg, var(--navy), var(--gold));
+      transition: width 0.4s ease;
+    }
+
+    /* ── Group table ── */
+    .groups-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    @media (max-width: 580px) {
+      .groups-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .group-chip {
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 12px;
+      text-align: center;
+      transition: border-color 0.2s;
+    }
+    .group-chip.full { border-color: var(--gold); background: var(--gold-bg); }
+
+    .group-chip-number {
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: var(--navy);
+      line-height: 1;
+    }
+    .group-chip-themes {
+      font-size: 0.62rem;
+      font-weight: 700;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin: 6px 0 8px;
+      line-height: 1.4;
+    }
+    .group-chip-count {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--muted);
+    }
+    .group-chip-count span { color: var(--text); font-weight: 800; }
+
+    .group-mini-bar {
+      margin-top: 8px;
+      background: #F3F0EB;
+      border-radius: 100px;
+      height: 5px;
+      overflow: hidden;
+    }
+    .group-mini-fill {
+      height: 100%;
+      border-radius: 100px;
+      background: var(--navy);
+      transition: width 0.4s ease;
+    }
+    .group-chip.full .group-mini-fill { background: var(--gold); }
+
+    /* ── Breakdown table ── */
+    .breakdown-section { margin-top: 4px; }
+    .breakdown-group { margin-bottom: 18px; }
+    .breakdown-group-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+    .breakdown-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .breakdown-label {
+      font-size: 0.82rem;
+      font-weight: 500;
+      width: 140px;
+      flex-shrink: 0;
+    }
+    .breakdown-track {
+      flex: 1;
+      background: #F3F0EB;
+      border-radius: 100px;
+      height: 10px;
+      overflow: hidden;
+    }
+    .breakdown-fill {
+      height: 100%;
+      border-radius: 100px;
+      transition: width 0.4s ease;
+    }
+    .fill-navy   { background: var(--navy); }
+    .fill-gold   { background: var(--gold); }
+    .fill-green  { background: #34D399; }
+    .fill-blue   { background: #60A5FA; }
+    .fill-purple { background: #A78BFA; }
+    .fill-coral  { background: #F87171; }
+
+    .breakdown-count {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text);
+      width: 28px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    /* ── Danger zone ── */
+    .danger-zone {
+      border: 1.5px solid #FCA5A5;
+      border-radius: 14px;
+      padding: 20px;
+      background: #FFF5F5;
+    }
+    .danger-zone p {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-bottom: 14px;
+      line-height: 1.5;
+    }
+
+    /* ── Last updated ── */
+    .last-updated {
+      text-align: right;
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: #111827;
+      color: white;
+      padding: 12px 22px;
+      border-radius: 100px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      opacity: 0;
+      transition: all 0.3s ease;
+      pointer-events: none;
+      white-space: nowrap;
+      z-index: 999;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+<div class="logo-bar">
+  <img src="/aija-logo.png" alt="AIJA — International Association of Young Lawyers">
+</div>
+
+<div class="header">
+  <div class="header-left">
+    <h1>Workshop Admin</h1>
+    <p>AIJA — Real-time group assignment dashboard</p>
+  </div>
+  <div class="live-badge">
+    <div class="live-dot"></div>
+    LIVE
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- QR Code -->
+  <div class="card">
+    <div class="card-title">Participant QR Code</div>
+    <div class="qr-section">
+      <div id="qr-box">Generating…</div>
+      <div class="qr-controls">
+        <label>Registration URL (edit if needed)</label>
+        <div class="url-row">
+          <input class="url-input" id="url-input" type="text" placeholder="http://192.168.x.x:3000">
+          <button class="btn btn-navy" onclick="generateQR()">Update QR</button>
+        </div>
+        <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="btn btn-outline" onclick="copyUrl()">Copy URL</button>
+          <button class="btn btn-gold" onclick="printQR()">Print QR</button>
+        </div>
+        <p class="qr-hint">
+          <strong>Display this QR code at the conference entrance.</strong><br>
+          Participants scan it to access the registration form on their phone.
+          The URL shown above must be reachable on the conference Wi-Fi.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats summary -->
+  <div class="last-updated" id="last-updated">Refreshing…</div>
+
+  <div class="grid-2">
+
+    <!-- Total -->
+    <div class="card">
+      <div class="card-title">Total Registered</div>
+      <div class="total-box">
+        <div class="total-number" id="stat-total">—</div>
+        <div>
+          <div class="total-label">participants</div>
+          <div class="total-max" id="stat-max">of — max</div>
+        </div>
+      </div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="total-bar" style="width:0%"></div>
+      </div>
+    </div>
+
+    <!-- Demographics -->
+    <div class="card">
+      <div class="card-title">Demographics</div>
+      <div class="breakdown-section" id="breakdown-section">
+        <div style="color:var(--muted); font-size:0.82rem;">Loading…</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Groups -->
+  <div class="card">
+    <div class="card-title">Group Distribution</div>
+    <div class="groups-grid" id="groups-grid">
+      <div style="color:var(--muted); font-size:0.82rem; grid-column:1/-1;">Loading…</div>
+    </div>
+  </div>
+
+  <!-- Danger zone -->
+  <div class="danger-zone">
+    <div class="card-title" style="color:#DC2626;">Reset All Data</div>
+    <p>This will permanently delete all registrations and reset group counts to zero. Use only before the event starts or for a fresh test run.</p>
+    <button class="btn btn-danger" onclick="confirmReset()">Reset All Registrations</button>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const THEME_SHORT = {
+    FM: 'Force Majeure',
+    AC: 'Asymmetrical Clauses',
+    IM: 'Interim Measures',
+  };
+
+  let qrInstance = null;
+
+  // ── QR Code ──────────────────────────────────────────────────
+  function defaultUrl() {
+    return window.location.origin;
+  }
+
+  function generateQR() {
+    const url = document.getElementById('url-input').value.trim() || defaultUrl();
+    document.getElementById('url-input').value = url;
+
+    const box = document.getElementById('qr-box');
+    box.innerHTML = '';
+
+    qrInstance = new QRCode(box, {
+      text: url,
+      width: 160,
+      height: 160,
+      colorDark: '#1C2B4A',
+      colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.M,
+    });
+  }
+
+  function copyUrl() {
+    const url = document.getElementById('url-input').value.trim();
+    navigator.clipboard.writeText(url).then(() => toast('URL copied to clipboard'));
+  }
+
+  function printQR() {
+    window.print();
+  }
+
+  // ── Stats ─────────────────────────────────────────────────────
+  async function fetchStats() {
+    try {
+      const res  = await fetch('/api/stats');
+      const data = await res.json();
+      renderStats(data);
+      document.getElementById('last-updated').textContent =
+        'Last updated: ' + new Date().toLocaleTimeString('en-GB');
+    } catch {
+      document.getElementById('last-updated').textContent = 'Connection error — retrying…';
+    }
+  }
+
+  function pct(n, total) {
+    return total === 0 ? 0 : Math.round((n / total) * 100);
+  }
+
+  function renderStats(data) {
+    const { total, maxTotal, groups, breakdown } = data;
+
+    // Total
+    document.getElementById('stat-total').textContent = total;
+    document.getElementById('stat-max').textContent   = `of ${maxTotal} max`;
+    document.getElementById('total-bar').style.width  = pct(total, maxTotal) + '%';
+
+    // Groups grid
+    const grid = document.getElementById('groups-grid');
+    grid.innerHTML = groups.map(g => {
+      const p = pct(g.count, g.max);
+      const full = g.count >= g.max;
+      return `
+        <div class="group-chip ${full ? 'full' : ''}">
+          <div class="group-chip-number">${g.id}</div>
+          <div class="group-chip-themes">${g.themeKeys.map(k => THEME_SHORT[k]).join('<br>')}</div>
+          <div class="group-chip-count"><span>${g.count}</span> / ${g.max}</div>
+          <div class="group-mini-bar">
+            <div class="group-mini-fill" style="width:${p}%"></div>
+          </div>
+        </div>`;
+    }).join('');
+
+    // Breakdown
+    const { gender, commission, legalSystem } = breakdown;
+    const sections = [
+      {
+        title: 'Gender',
+        rows: [
+          { label: 'Male',   count: gender.Male,   cls: 'fill-navy' },
+          { label: 'Female', count: gender.Female, cls: 'fill-gold' },
+        ],
+      },
+      {
+        title: 'Commission',
+        rows: [
+          { label: 'Litigation',  count: commission.Litigation,  cls: 'fill-navy' },
+          { label: 'Arbitration', count: commission.Arbitration, cls: 'fill-blue' },
+          { label: 'T.R.AD.E.',   count: commission['T.R.AD.E.'], cls: 'fill-purple' },
+        ],
+      },
+      {
+        title: 'Legal System',
+        rows: [
+          { label: 'Common Law', count: legalSystem['Common Law'], cls: 'fill-green' },
+          { label: 'Civil Law',  count: legalSystem['Civil Law'],  cls: 'fill-coral' },
+        ],
+      },
+    ];
+
+    document.getElementById('breakdown-section').innerHTML = sections.map(sec => `
+      <div class="breakdown-group">
+        <div class="breakdown-group-title">${sec.title}</div>
+        ${sec.rows.map(row => `
+          <div class="breakdown-row">
+            <div class="breakdown-label">${row.label}</div>
+            <div class="breakdown-track">
+              <div class="breakdown-fill ${row.cls}" style="width:${pct(row.count, total)}%"></div>
+            </div>
+            <div class="breakdown-count">${row.count}</div>
+          </div>`).join('')}
+      </div>`).join('');
+  }
+
+  // ── Reset ─────────────────────────────────────────────────────
+  function confirmReset() {
+    if (!confirm('Are you sure you want to delete ALL registrations? This cannot be undone.')) return;
+    fetch('/api/reset', { method: 'POST' })
+      .then(() => { toast('All data has been reset.'); fetchStats(); })
+      .catch(() => toast('Error: could not reset.'));
+  }
+
+  // ── Toast ─────────────────────────────────────────────────────
+  function toast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 2800);
+  }
+
+  // ── Init ──────────────────────────────────────────────────────
+  document.getElementById('url-input').value = defaultUrl();
+  generateQR();
+  fetchStats();
+  setInterval(fetchStats, 5000); // auto-refresh every 5 seconds
+</script>
+
+</body>
+</html>
