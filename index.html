@@ -40,10 +40,7 @@
       text-align: center;
       border-bottom: 3px solid var(--aija-red);
     }
-    .logo-bar img {
-      height: 56px;
-      width: auto;
-    }
+    .logo-bar img { height: 56px; width: auto; }
 
     /* ── Header ── */
     .header {
@@ -63,7 +60,6 @@
       font-size: 1.2rem;
       font-weight: 800;
       color: #FFFFFF;
-      letter-spacing: 0.2px;
       line-height: 1.3;
     }
     .header .workshop-subtitle {
@@ -119,14 +115,10 @@
       -webkit-tap-highlight-color: transparent;
     }
     .radio-option:active { background: var(--gold-bg); }
-    .radio-option.selected {
-      border-color: var(--navy);
-      background: #EEF1F8;
-    }
+    .radio-option.selected { border-color: var(--navy); background: #EEF1F8; }
     .radio-option input[type="radio"] {
       accent-color: var(--navy);
-      width: 18px;
-      height: 18px;
+      width: 18px; height: 18px;
       flex-shrink: 0;
       pointer-events: none;
     }
@@ -159,15 +151,12 @@
       -webkit-tap-highlight-color: transparent;
       user-select: none;
     }
-    .theme-card:active { opacity: 0.85; }
-
     .theme-card.rank-1 { border-color: var(--gold); background: var(--gold-bg); }
     .theme-card.rank-2 { border-color: var(--rank2); background: var(--rank2-bg); }
     .theme-card.rank-3 { border-color: #C5C5C5; background: var(--rank3-bg); opacity: 0.75; }
 
     .rank-badge {
-      width: 32px;
-      height: 32px;
+      width: 32px; height: 32px;
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -201,7 +190,6 @@
       border-radius: 12px;
       font-size: 1rem;
       font-weight: 700;
-      letter-spacing: 0.3px;
       cursor: pointer;
       transition: background 0.2s, transform 0.1s;
       -webkit-tap-highlight-color: transparent;
@@ -249,7 +237,7 @@
     .result-card {
       background: var(--navy);
       border-radius: 20px;
-      padding: 36px 24px 32px;
+      padding: 28px 20px 28px;
       text-align: center;
       margin-bottom: 16px;
       position: relative;
@@ -262,14 +250,7 @@
       width: 180px; height: 180px;
       border-radius: 50%;
       background: rgba(201,168,76,0.08);
-    }
-    .result-card::after {
-      content: '';
-      position: absolute;
-      bottom: -60px; left: -30px;
-      width: 200px; height: 200px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.03);
+      pointer-events: none;
     }
 
     .result-eyebrow {
@@ -278,53 +259,49 @@
       letter-spacing: 2.5px;
       text-transform: uppercase;
       color: rgba(255,255,255,0.45);
-      margin-bottom: 10px;
+      margin-bottom: 20px;
     }
-    .result-group-number {
-      font-size: 6rem;
-      font-weight: 900;
+
+    /* Two session columns */
+    .result-sessions {
+      display: grid;
+      grid-template-columns: 1fr 1px 1fr;
+      gap: 0;
+      align-items: center;
+    }
+    .session-col { padding: 8px 12px; }
+    .session-divider {
+      width: 1px;
+      height: 80px;
+      background: rgba(201,168,76,0.3);
+      margin: 0 auto;
+    }
+    .session-label {
+      font-size: 0.6rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
       color: var(--gold);
+      margin-bottom: 6px;
+    }
+    .session-group-number {
+      font-size: 4.5rem;
+      font-weight: 900;
+      color: #FFFFFF;
       line-height: 1;
-      letter-spacing: -2px;
       animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+    .session-group-number.delayed {
+      animation-delay: 0.15s;
     }
     @keyframes popIn {
       from { transform: scale(0.6); opacity: 0; }
       to   { transform: scale(1);   opacity: 1; }
     }
-    .result-group-label {
-      font-size: 0.8rem;
-      color: rgba(255,255,255,0.5);
+    .session-group-sub {
+      font-size: 0.68rem;
+      color: rgba(255,255,255,0.45);
       margin-top: 4px;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-    }
-
-    .result-divider {
-      width: 40px; height: 1px;
-      background: rgba(201,168,76,0.35);
-      margin: 22px auto 18px;
-    }
-
-    .result-sessions-label {
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.4);
-      margin-bottom: 12px;
-    }
-    .theme-pill {
-      display: inline-block;
-      background: rgba(201,168,76,0.15);
-      color: var(--gold);
-      border: 1.5px solid rgba(201,168,76,0.4);
-      padding: 8px 16px;
-      border-radius: 100px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      margin: 5px 4px;
-      line-height: 1.3;
     }
 
     .result-info-card {
@@ -399,10 +376,29 @@
       </div>
     </div>
 
+    <!-- Seniority -->
+    <div class="card">
+      <div class="card-label">Seniority</div>
+      <div class="radio-group">
+        <div class="radio-option" onclick="pick('seniority','junior',this)">
+          <input type="radio" name="seniority" value="junior">
+          <label>Under 35</label>
+        </div>
+        <div class="radio-option" onclick="pick('seniority','mid',this)">
+          <input type="radio" name="seniority" value="mid">
+          <label>35 – 40</label>
+        </div>
+        <div class="radio-option" onclick="pick('seniority','senior',this)">
+          <input type="radio" name="seniority" value="senior">
+          <label>Almost overage (40+)</label>
+        </div>
+      </div>
+    </div>
+
     <!-- Theme Preferences -->
     <div class="card">
       <div class="card-label">Theme Preferences</div>
-      <p class="theme-hint">Tap the themes in order of preference — most preferred first. Your top two choices determine your group.</p>
+      <p class="theme-hint">Tap the themes in order of preference — most preferred first. Your top two choices determine your sessions.</p>
       <div class="theme-cards">
         <div class="theme-card" id="card-FM" onclick="rankTheme('FM')">
           <div class="rank-badge" id="badge-FM">—</div>
@@ -443,9 +439,28 @@
       </div>
     </div>
 
+    <!-- Dancefloor -->
+    <div class="card">
+      <div class="card-label">Hours on the dancefloor last night</div>
+      <div class="radio-group">
+        <div class="radio-option" onclick="pick('dancefloor','low',this)">
+          <input type="radio" name="dancefloor" value="low">
+          <label>Less than 2 hours</label>
+        </div>
+        <div class="radio-option" onclick="pick('dancefloor','medium',this)">
+          <input type="radio" name="dancefloor" value="medium">
+          <label>Between 2 and 4 hours</label>
+        </div>
+        <div class="radio-option" onclick="pick('dancefloor','high',this)">
+          <input type="radio" name="dancefloor" value="high">
+          <label>More than 4 hours</label>
+        </div>
+      </div>
+    </div>
+
     <div class="error-msg" id="error-msg"></div>
     <div class="spinner-wrap" id="spinner"><div class="spinner"></div></div>
-    <button class="submit-btn" id="submit-btn" onclick="submitForm()">Confirm &amp; Get My Group →</button>
+    <button class="submit-btn" id="submit-btn" onclick="submitForm()">Confirm &amp; Get My Groups →</button>
     <div class="footer">AIJA Workshop</div>
   </div>
 </div>
@@ -454,14 +469,25 @@
 <div id="result-page">
   <div class="container">
     <div class="result-card">
-      <div class="result-eyebrow">You have been assigned to</div>
-      <div class="result-group-number" id="res-number">—</div>
-      <div class="result-group-label">Group <span id="res-label"></span></div>
+      <div class="result-eyebrow">Your workshop assignment</div>
+      <div class="result-sessions">
+        <div class="session-col">
+          <div class="session-label">Session 1</div>
+          <div class="session-group-number" id="res-g1">—</div>
+          <div class="session-group-sub">Group <span id="res-g1-label"></span></div>
+        </div>
+        <div class="session-divider"></div>
+        <div class="session-col">
+          <div class="session-label">Session 2</div>
+          <div class="session-group-number delayed" id="res-g2">—</div>
+          <div class="session-group-sub">Group <span id="res-g2-label"></span></div>
+        </div>
+      </div>
     </div>
 
     <div class="result-info-card">
       <h3>What to do next</h3>
-      <p>Please head to the room assigned to your group. You will attend two 30-minute sessions covering the themes listed above. Enjoy the workshop!</p>
+      <p>Please proceed to the room assigned to your <strong>Session 1</strong> group. After 30 minutes, move to your <strong>Session 2</strong> room. Enjoy the workshop!</p>
     </div>
 
     <div class="footer">AIJA Workshop</div>
@@ -470,7 +496,7 @@
 
 <script>
   const THEMES = ['FM', 'AC', 'IM'];
-  const answers = { gender: null, commission: null, commonLaw: null };
+  const answers = { gender: null, commission: null, seniority: null, commonLaw: null, dancefloor: null };
   const ranking = []; // up to 2 manually selected; 3rd is auto
 
   function pick(field, value, el) {
@@ -492,11 +518,9 @@
     const auto = getAuto3rd();
 
     if (idx >= 0) {
-      // Remove from this position onward (allows undoing)
       ranking.splice(idx);
     } else if (id === auto) {
-      // Swap auto-3rd with current 2nd choice
-      ranking[1] = id;
+      ranking[1] = id; // swap auto-3rd with current 2nd
     } else if (ranking.length < 2) {
       ranking.push(id);
     }
@@ -543,8 +567,9 @@
   async function submitForm() {
     const errEl = document.getElementById('error-msg');
     const fr = fullRanking();
+    const { gender, commission, seniority, commonLaw, dancefloor } = answers;
 
-    if (!answers.gender || !answers.commission || !answers.commonLaw || !fr) {
+    if (!gender || !commission || !seniority || !commonLaw || !dancefloor || !fr) {
       errEl.style.display = 'block';
       errEl.textContent = 'Please answer all questions before submitting.';
       return;
@@ -558,12 +583,7 @@
       const res = await fetch('/api/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          gender: answers.gender,
-          commission: answers.commission,
-          themeRanking: fr,
-          commonLaw: answers.commonLaw,
-        }),
+        body: JSON.stringify({ gender, commission, themeRanking: fr, commonLaw, seniority, dancefloor }),
       });
 
       const data = await res.json();
@@ -581,12 +601,11 @@
 
   function showResult(data) {
     document.getElementById('form-page').style.display = 'none';
-    const rp = document.getElementById('result-page');
-    rp.style.display = 'block';
-    document.getElementById('res-number').textContent = data.groupId;
-    document.getElementById('res-label').textContent  = data.groupId;
-    document.getElementById('res-pills').innerHTML =
-      data.themes.map(t => `<span class="theme-pill">${t}</span>`).join('');
+    document.getElementById('result-page').style.display = 'block';
+    document.getElementById('res-g1').textContent       = data.group1.id;
+    document.getElementById('res-g1-label').textContent = data.group1.id;
+    document.getElementById('res-g2').textContent       = data.group2.id;
+    document.getElementById('res-g2-label').textContent = data.group2.id;
     window.scrollTo(0, 0);
   }
 </script>
