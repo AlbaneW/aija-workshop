@@ -19,8 +19,6 @@
       --text: #1A1A1A;
       --muted: #6B7280;
       --border: #E0DAD0;
-      --green: #059669;
-      --green-bg: #ECFDF5;
     }
 
     body {
@@ -49,35 +47,26 @@
       gap: 16px;
     }
     .header-left h1 { font-size: 1.1rem; font-weight: 700; color: #fff; }
-    .header-left p  { font-size: 0.72rem; color: rgba(255,255,255,0.45); margin-top: 3px; letter-spacing: 0.5px; }
+    .header-left p  { font-size: 0.72rem; color: rgba(255,255,255,0.45); margin-top: 3px; }
 
     .live-badge {
-      display: flex;
-      align-items: center;
-      gap: 7px;
+      display: flex; align-items: center; gap: 7px;
       background: rgba(5,150,105,0.2);
       border: 1px solid rgba(5,150,105,0.4);
       border-radius: 100px;
       padding: 5px 12px;
-      font-size: 0.72rem;
-      font-weight: 700;
-      color: #6EE7B7;
+      font-size: 0.72rem; font-weight: 700; color: #6EE7B7;
       white-space: nowrap;
     }
     .live-dot {
-      width: 7px; height: 7px;
-      border-radius: 50%;
+      width: 7px; height: 7px; border-radius: 50%;
       background: #34D399;
       animation: pulse 1.5s ease-in-out infinite;
     }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50%       { opacity: 0.3; }
-    }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
     /* ── Layout ── */
-    .page { max-width: 960px; margin: 0 auto; padding: 24px 20px 48px; }
-
+    .page { max-width: 980px; margin: 0 auto; padding: 24px 20px 48px; }
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     @media (max-width: 680px) { .grid-2 { grid-template-columns: 1fr; } }
 
@@ -90,66 +79,34 @@
       margin-bottom: 16px;
     }
     .card-title {
-      font-size: 0.68rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      color: var(--gold);
-      margin-bottom: 16px;
+      font-size: 0.68rem; font-weight: 800;
+      text-transform: uppercase; letter-spacing: 1.5px;
+      color: var(--gold); margin-bottom: 16px;
     }
 
     /* ── QR section ── */
-    .qr-section {
-      display: flex;
-      gap: 24px;
-      align-items: flex-start;
-      flex-wrap: wrap;
-    }
+    .qr-section { display: flex; gap: 24px; align-items: flex-start; flex-wrap: wrap; }
     #qr-box {
-      background: #fff;
-      border: 2px solid var(--border);
-      border-radius: 12px;
-      padding: 12px;
-      flex-shrink: 0;
-      min-width: 160px;
-      min-height: 160px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--muted);
-      font-size: 0.8rem;
-      text-align: center;
+      background: #fff; border: 2px solid var(--border); border-radius: 12px;
+      padding: 12px; flex-shrink: 0;
+      min-width: 160px; min-height: 160px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--muted); font-size: 0.8rem; text-align: center;
     }
     .qr-controls { flex: 1; min-width: 200px; }
-    .qr-controls label {
-      display: block;
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: var(--muted);
-      margin-bottom: 8px;
-    }
+    .qr-controls label { display: block; font-size: 0.78rem; font-weight: 600; color: var(--muted); margin-bottom: 8px; }
     .url-row { display: flex; gap: 8px; }
     .url-input {
-      flex: 1;
-      padding: 10px 12px;
-      border: 1.5px solid var(--border);
-      border-radius: 8px;
-      font-size: 0.85rem;
-      font-family: monospace;
-      color: var(--text);
-      background: #FAFAF8;
-      outline: none;
+      flex: 1; padding: 10px 12px;
+      border: 1.5px solid var(--border); border-radius: 8px;
+      font-size: 0.85rem; font-family: monospace; color: var(--text);
+      background: #FAFAF8; outline: none;
     }
     .url-input:focus { border-color: var(--navy); }
     .btn {
-      padding: 10px 16px;
-      border: none;
-      border-radius: 8px;
-      font-size: 0.82rem;
-      font-weight: 700;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: background 0.15s;
+      padding: 10px 16px; border: none; border-radius: 8px;
+      font-size: 0.82rem; font-weight: 700; cursor: pointer;
+      white-space: nowrap; transition: background 0.15s;
     }
     .btn-navy { background: var(--navy); color: white; }
     .btn-navy:hover { background: var(--navy-light); }
@@ -157,203 +114,88 @@
     .btn-gold:hover { background: #b8943e; }
     .btn-danger { background: #DC2626; color: white; }
     .btn-danger:hover { background: #b91c1c; }
-    .btn-outline {
-      background: transparent;
-      color: var(--navy);
-      border: 1.5px solid var(--navy);
-    }
+    .btn-outline { background: transparent; color: var(--navy); border: 1.5px solid var(--navy); }
     .btn-outline:hover { background: #EEF1F8; }
-
-    .qr-hint {
-      font-size: 0.78rem;
-      color: var(--muted);
-      margin-top: 12px;
-      line-height: 1.5;
-    }
+    .qr-hint { font-size: 0.78rem; color: var(--muted); margin-top: 12px; line-height: 1.5; }
     .qr-hint strong { color: var(--text); }
 
     /* ── Total counter ── */
-    .total-box {
-      display: flex;
-      align-items: baseline;
-      gap: 10px;
-      margin-bottom: 18px;
-    }
-    .total-number {
-      font-size: 3rem;
-      font-weight: 900;
-      color: var(--navy);
-      line-height: 1;
-    }
+    .total-box { display: flex; align-items: baseline; gap: 10px; margin-bottom: 14px; }
+    .total-number { font-size: 3rem; font-weight: 900; color: var(--navy); line-height: 1; }
     .total-label { font-size: 0.85rem; color: var(--muted); }
-    .total-max { font-size: 0.8rem; color: var(--muted); }
-
-    /* ── Progress bar ── */
     .progress-bar-wrap {
-      background: #F3F0EB;
-      border-radius: 100px;
-      height: 8px;
-      margin-bottom: 20px;
-      overflow: hidden;
+      background: #F3F0EB; border-radius: 100px; height: 8px; overflow: hidden;
     }
     .progress-bar-fill {
-      height: 100%;
-      border-radius: 100px;
+      height: 100%; border-radius: 100px;
       background: linear-gradient(90deg, var(--navy), var(--gold));
       transition: width 0.4s ease;
     }
 
-    /* ── Group table ── */
-    .groups-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
+    /* ── Groups by topic ── */
+    .topic-section { margin-bottom: 20px; }
+    .topic-label {
+      font-size: 0.7rem; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 1px; color: var(--muted); margin-bottom: 10px;
     }
-    @media (max-width: 580px) {
-      .groups-grid { grid-template-columns: repeat(2, 1fr); }
-    }
+    .topic-groups { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
     .group-chip {
-      border: 1.5px solid var(--border);
-      border-radius: 12px;
-      padding: 14px 12px;
-      text-align: center;
-      transition: border-color 0.2s;
+      border: 1.5px solid var(--border); border-radius: 12px;
+      padding: 14px 12px; text-align: center;
     }
-    .group-chip.full { border-color: var(--gold); background: var(--gold-bg); }
+    .group-chip.s1-full { border-color: var(--gold); }
+    .group-chip-number { font-size: 1.8rem; font-weight: 900; color: var(--navy); line-height: 1; }
 
-    .group-chip-number {
-      font-size: 1.5rem;
-      font-weight: 900;
-      color: var(--navy);
-      line-height: 1;
+    .group-sessions { margin-top: 10px; display: flex; flex-direction: column; gap: 6px; }
+    .session-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .session-tag {
+      font-size: 0.6rem; font-weight: 800; letter-spacing: 1px;
+      text-transform: uppercase; color: var(--muted); width: 60px; flex-shrink: 0;
     }
-    .group-chip-themes {
-      font-size: 0.62rem;
-      font-weight: 700;
-      color: var(--gold);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin: 6px 0 8px;
-      line-height: 1.4;
-    }
-    .group-chip-count {
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: var(--muted);
-    }
-    .group-chip-count span { color: var(--text); font-weight: 800; }
+    .mini-bar-wrap { flex: 1; background: #F3F0EB; border-radius: 100px; height: 6px; overflow: hidden; }
+    .mini-bar-fill { height: 100%; border-radius: 100px; transition: width 0.4s ease; }
+    .s1-fill { background: var(--navy); }
+    .s2-fill { background: var(--gold); }
+    .session-count { font-size: 0.75rem; font-weight: 700; color: var(--text); width: 40px; text-align: right; flex-shrink: 0; }
 
-    .group-mini-bar {
-      margin-top: 8px;
-      background: #F3F0EB;
-      border-radius: 100px;
-      height: 5px;
-      overflow: hidden;
-    }
-    .group-mini-fill {
-      height: 100%;
-      border-radius: 100px;
-      background: var(--navy);
-      transition: width 0.4s ease;
-    }
-    .group-chip.full .group-mini-fill { background: var(--gold); }
-
-    /* ── Breakdown table ── */
-    .breakdown-section { margin-top: 4px; }
+    /* ── Breakdown ── */
     .breakdown-group { margin-bottom: 18px; }
     .breakdown-group-title {
-      font-size: 0.72rem;
-      font-weight: 700;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 10px;
+      font-size: 0.72rem; font-weight: 700; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;
     }
-    .breakdown-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 8px;
-    }
-    .breakdown-label {
-      font-size: 0.82rem;
-      font-weight: 500;
-      width: 140px;
-      flex-shrink: 0;
-    }
-    .breakdown-track {
-      flex: 1;
-      background: #F3F0EB;
-      border-radius: 100px;
-      height: 10px;
-      overflow: hidden;
-    }
-    .breakdown-fill {
-      height: 100%;
-      border-radius: 100px;
-      transition: width 0.4s ease;
-    }
+    .breakdown-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .breakdown-label { font-size: 0.82rem; font-weight: 500; width: 160px; flex-shrink: 0; }
+    .breakdown-track { flex: 1; background: #F3F0EB; border-radius: 100px; height: 10px; overflow: hidden; }
+    .breakdown-fill { height: 100%; border-radius: 100px; transition: width 0.4s ease; }
     .fill-navy   { background: var(--navy); }
     .fill-gold   { background: var(--gold); }
     .fill-green  { background: #34D399; }
     .fill-blue   { background: #60A5FA; }
     .fill-purple { background: #A78BFA; }
     .fill-coral  { background: #F87171; }
-
-    .breakdown-count {
-      font-size: 0.82rem;
-      font-weight: 700;
-      color: var(--text);
-      width: 28px;
-      text-align: right;
-      flex-shrink: 0;
-    }
+    .fill-teal   { background: #2DD4BF; }
+    .fill-orange { background: #FB923C; }
+    .breakdown-count { font-size: 0.82rem; font-weight: 700; color: var(--text); width: 28px; text-align: right; flex-shrink: 0; }
 
     /* ── Danger zone ── */
-    .danger-zone {
-      border: 1.5px solid #FCA5A5;
-      border-radius: 14px;
-      padding: 20px;
-      background: #FFF5F5;
-    }
-    .danger-zone p {
-      font-size: 0.82rem;
-      color: var(--muted);
-      margin-bottom: 14px;
-      line-height: 1.5;
-    }
+    .danger-zone { border: 1.5px solid #FCA5A5; border-radius: 14px; padding: 20px; background: #FFF5F5; }
+    .danger-zone p { font-size: 0.82rem; color: var(--muted); margin-bottom: 14px; line-height: 1.5; }
 
-    /* ── Last updated ── */
-    .last-updated {
-      text-align: right;
-      font-size: 0.7rem;
-      color: var(--muted);
-      margin-bottom: 14px;
-    }
+    .last-updated { text-align: right; font-size: 0.7rem; color: var(--muted); margin-bottom: 14px; }
 
     /* ── Toast ── */
     .toast {
-      position: fixed;
-      bottom: 24px;
-      left: 50%;
+      position: fixed; bottom: 24px; left: 50%;
       transform: translateX(-50%) translateY(80px);
-      background: #111827;
-      color: white;
-      padding: 12px 22px;
-      border-radius: 100px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      opacity: 0;
-      transition: all 0.3s ease;
-      pointer-events: none;
-      white-space: nowrap;
-      z-index: 999;
+      background: #111827; color: white;
+      padding: 12px 22px; border-radius: 100px;
+      font-size: 0.85rem; font-weight: 600;
+      opacity: 0; transition: all 0.3s ease;
+      pointer-events: none; white-space: nowrap; z-index: 999;
     }
-    .toast.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
   </style>
 </head>
 <body>
@@ -367,10 +209,7 @@
     <h1>Workshop Admin</h1>
     <p>AIJA — Real-time group assignment dashboard</p>
   </div>
-  <div class="live-badge">
-    <div class="live-dot"></div>
-    LIVE
-  </div>
+  <div class="live-badge"><div class="live-dot"></div>LIVE</div>
 </div>
 
 <div class="page">
@@ -383,23 +222,21 @@
       <div class="qr-controls">
         <label>Registration URL (edit if needed)</label>
         <div class="url-row">
-          <input class="url-input" id="url-input" type="text" placeholder="http://192.168.x.x:3000">
+          <input class="url-input" id="url-input" type="text" placeholder="https://…">
           <button class="btn btn-navy" onclick="generateQR()">Update QR</button>
         </div>
         <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;">
           <button class="btn btn-outline" onclick="copyUrl()">Copy URL</button>
-          <button class="btn btn-gold" onclick="printQR()">Print QR</button>
+          <button class="btn btn-gold" onclick="window.print()">Print QR</button>
         </div>
         <p class="qr-hint">
           <strong>Display this QR code at the conference entrance.</strong><br>
           Participants scan it to access the registration form on their phone.
-          The URL shown above must be reachable on the conference Wi-Fi.
         </p>
       </div>
     </div>
   </div>
 
-  <!-- Stats summary -->
   <div class="last-updated" id="last-updated">Refreshing…</div>
 
   <div class="grid-2">
@@ -409,10 +246,7 @@
       <div class="card-title">Total Registered</div>
       <div class="total-box">
         <div class="total-number" id="stat-total">—</div>
-        <div>
-          <div class="total-label">participants</div>
-          <div class="total-max" id="stat-max">of — max</div>
-        </div>
+        <div class="total-label">participants</div>
       </div>
       <div class="progress-bar-wrap">
         <div class="progress-bar-fill" id="total-bar" style="width:0%"></div>
@@ -422,25 +256,21 @@
     <!-- Demographics -->
     <div class="card">
       <div class="card-title">Demographics</div>
-      <div class="breakdown-section" id="breakdown-section">
-        <div style="color:var(--muted); font-size:0.82rem;">Loading…</div>
-      </div>
+      <div id="breakdown-section"><div style="color:var(--muted);font-size:0.82rem;">Loading…</div></div>
     </div>
 
   </div>
 
-  <!-- Groups -->
+  <!-- Groups by topic -->
   <div class="card">
-    <div class="card-title">Group Distribution</div>
-    <div class="groups-grid" id="groups-grid">
-      <div style="color:var(--muted); font-size:0.82rem; grid-column:1/-1;">Loading…</div>
-    </div>
+    <div class="card-title">Group Distribution — by Topic &amp; Session</div>
+    <div id="groups-container"><div style="color:var(--muted);font-size:0.82rem;">Loading…</div></div>
   </div>
 
   <!-- Danger zone -->
   <div class="danger-zone">
     <div class="card-title" style="color:#DC2626;">Reset All Data</div>
-    <p>This will permanently delete all registrations and reset group counts to zero. Use only before the event starts or for a fresh test run.</p>
+    <p>This will permanently delete all registrations and reset all group counts to zero.</p>
     <button class="btn btn-danger" onclick="confirmReset()">Reset All Registrations</button>
   </div>
 
@@ -449,43 +279,28 @@
 <div class="toast" id="toast"></div>
 
 <script>
-  const THEME_SHORT = {
-    FM: 'Force Majeure',
+  const THEME_NAMES = {
+    FM: 'Force Majeure / Hardship Defenses',
     AC: 'Asymmetrical Clauses',
     IM: 'Interim Measures',
   };
 
-  let qrInstance = null;
-
   // ── QR Code ──────────────────────────────────────────────────
-  function defaultUrl() {
-    return window.location.origin;
-  }
-
   function generateQR() {
-    const url = document.getElementById('url-input').value.trim() || defaultUrl();
+    const url = document.getElementById('url-input').value.trim() || window.location.origin;
     document.getElementById('url-input').value = url;
-
     const box = document.getElementById('qr-box');
     box.innerHTML = '';
-
-    qrInstance = new QRCode(box, {
-      text: url,
-      width: 160,
-      height: 160,
-      colorDark: '#1C2B4A',
-      colorLight: '#ffffff',
+    new QRCode(box, {
+      text: url, width: 160, height: 160,
+      colorDark: '#1C2B4A', colorLight: '#ffffff',
       correctLevel: QRCode.CorrectLevel.M,
     });
   }
 
   function copyUrl() {
     const url = document.getElementById('url-input').value.trim();
-    navigator.clipboard.writeText(url).then(() => toast('URL copied to clipboard'));
-  }
-
-  function printQR() {
-    window.print();
+    navigator.clipboard.writeText(url).then(() => showToast('URL copied to clipboard'));
   }
 
   // ── Stats ─────────────────────────────────────────────────────
@@ -502,7 +317,7 @@
   }
 
   function pct(n, total) {
-    return total === 0 ? 0 : Math.round((n / total) * 100);
+    return total === 0 ? 0 : Math.min(100, Math.round((n / total) * 100));
   }
 
   function renderStats(data) {
@@ -510,27 +325,47 @@
 
     // Total
     document.getElementById('stat-total').textContent = total;
-    document.getElementById('stat-max').textContent   = `of ${maxTotal} max`;
     document.getElementById('total-bar').style.width  = pct(total, maxTotal) + '%';
 
-    // Groups grid
-    const grid = document.getElementById('groups-grid');
-    grid.innerHTML = groups.map(g => {
-      const p = pct(g.count, g.max);
-      const full = g.count >= g.max;
+    // Groups by topic
+    const topics = [
+      { theme: 'FM', ids: [1, 2] },
+      { theme: 'AC', ids: [3, 4] },
+      { theme: 'IM', ids: [5, 6] },
+    ];
+
+    document.getElementById('groups-container').innerHTML = topics.map(topic => {
+      const topicGroups = groups.filter(g => topic.ids.includes(g.id));
       return `
-        <div class="group-chip ${full ? 'full' : ''}">
-          <div class="group-chip-number">${g.id}</div>
-          <div class="group-chip-themes">${g.themeKeys.map(k => THEME_SHORT[k]).join('<br>')}</div>
-          <div class="group-chip-count"><span>${g.count}</span> / ${g.max}</div>
-          <div class="group-mini-bar">
-            <div class="group-mini-fill" style="width:${p}%"></div>
+        <div class="topic-section">
+          <div class="topic-label">${THEME_NAMES[topic.theme]}</div>
+          <div class="topic-groups">
+            ${topicGroups.map(g => `
+              <div class="group-chip">
+                <div class="group-chip-number">${g.id}</div>
+                <div class="group-sessions">
+                  <div class="session-row">
+                    <div class="session-tag">Session 1</div>
+                    <div class="mini-bar-wrap">
+                      <div class="mini-bar-fill s1-fill" style="width:${pct(g.s1Count, g.max)}%"></div>
+                    </div>
+                    <div class="session-count">${g.s1Count}/${g.max}</div>
+                  </div>
+                  <div class="session-row">
+                    <div class="session-tag">Session 2</div>
+                    <div class="mini-bar-wrap">
+                      <div class="mini-bar-fill s2-fill" style="width:${pct(g.s2Count, g.max)}%"></div>
+                    </div>
+                    <div class="session-count">${g.s2Count}/${g.max}</div>
+                  </div>
+                </div>
+              </div>`).join('')}
           </div>
         </div>`;
     }).join('');
 
     // Breakdown
-    const { gender, commission, legalSystem } = breakdown;
+    const { gender, commission, legalSystem, seniority, dancefloor } = breakdown;
     const sections = [
       {
         title: 'Gender',
@@ -542,9 +377,9 @@
       {
         title: 'Commission',
         rows: [
-          { label: 'Litigation',  count: commission.Litigation,  cls: 'fill-navy' },
-          { label: 'Arbitration', count: commission.Arbitration, cls: 'fill-blue' },
-          { label: 'T.R.AD.E.',   count: commission['T.R.AD.E.'], cls: 'fill-purple' },
+          { label: 'Litigation',  count: commission.Litigation,  cls: 'fill-navy'   },
+          { label: 'Arbitration', count: commission.Arbitration, cls: 'fill-blue'   },
+          { label: 'T.R.AD.E.',  count: commission['T.R.AD.E.'], cls: 'fill-purple' },
         ],
       },
       {
@@ -552,6 +387,22 @@
         rows: [
           { label: 'Common Law', count: legalSystem['Common Law'], cls: 'fill-green' },
           { label: 'Civil Law',  count: legalSystem['Civil Law'],  cls: 'fill-coral' },
+        ],
+      },
+      {
+        title: 'Seniority',
+        rows: [
+          { label: 'Under 35',             count: seniority['Under 35'],            cls: 'fill-teal'   },
+          { label: '35 – 40',              count: seniority['35 – 40'],             cls: 'fill-blue'   },
+          { label: 'Almost overage (40+)', count: seniority['Almost overage (40+)'], cls: 'fill-purple' },
+        ],
+      },
+      {
+        title: 'Dancefloor last night 🕺',
+        rows: [
+          { label: 'Less than 2h', count: dancefloor['Less than 2h'], cls: 'fill-green'  },
+          { label: '2 – 4h',       count: dancefloor['2 – 4h'],       cls: 'fill-orange' },
+          { label: 'More than 4h', count: dancefloor['More than 4h'], cls: 'fill-coral'  },
         ],
       },
     ];
@@ -574,12 +425,12 @@
   function confirmReset() {
     if (!confirm('Are you sure you want to delete ALL registrations? This cannot be undone.')) return;
     fetch('/api/reset', { method: 'POST' })
-      .then(() => { toast('All data has been reset.'); fetchStats(); })
-      .catch(() => toast('Error: could not reset.'));
+      .then(() => { showToast('All data has been reset.'); fetchStats(); })
+      .catch(() => showToast('Error: could not reset.'));
   }
 
   // ── Toast ─────────────────────────────────────────────────────
-  function toast(msg) {
+  function showToast(msg) {
     const el = document.getElementById('toast');
     el.textContent = msg;
     el.classList.add('show');
@@ -587,10 +438,10 @@
   }
 
   // ── Init ──────────────────────────────────────────────────────
-  document.getElementById('url-input').value = defaultUrl();
+  document.getElementById('url-input').value = window.location.origin;
   generateQR();
   fetchStats();
-  setInterval(fetchStats, 5000); // auto-refresh every 5 seconds
+  setInterval(fetchStats, 5000);
 </script>
 
 </body>
