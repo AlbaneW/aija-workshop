@@ -205,7 +205,7 @@ app.get('/api/stats', (req, res) => {
       seniority: {
         'Under 35':             participants.filter(p => p.seniority === 'junior').length,
         '35 – 40':              participants.filter(p => p.seniority === 'mid').length,
-        'Almost overage (40+)': participants.filter(p => p.seniority === 'senior').length,
+        '40+': participants.filter(p => p.seniority === 'senior').length,
       },
       dancefloor: {
         'Less than 2h': participants.filter(p => p.dancefloor === 'low').length,
