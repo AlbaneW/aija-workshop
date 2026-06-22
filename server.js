@@ -33,8 +33,8 @@ const ALL_GROUPS = [
 const GROUPS_BY_THEME_BASE     = { FM: [1, 2],    AC: [3, 4],    IM: [5, 6]    };
 const GROUPS_BY_THEME_EXPANDED = { FM: [1, 2, 7], AC: [3, 4, 8], IM: [5, 6, 9] };
 
-// Target ~20-25 people per group per session
-const MAX_PER_GROUP  = 25;
+// ~200 participants / 6 groups ≈ 34 per group; groups 7-9 extend to 306 if needed
+const MAX_PER_GROUP  = 34;
 const FILL_TOLERANCE = 2;
 
 let participants   = [];
