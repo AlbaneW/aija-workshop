@@ -15,33 +15,39 @@ const THEME_NAMES = {
   IM: 'Interim Measures',
 };
 
-// 6 groups: 2 per topic, each with a dedicated speaker who presents twice
-// Groups 1-2: FM | Groups 3-4: AC | Groups 5-6: IM
-const GROUPS = [
+// All 9 groups: 2 base + 1 expansion per topic
+// Groups 1-2: FM | Groups 3-4: AC | Groups 5-6: IM (always active)
+// Groups 7 (FM), 8 (AC), 9 (IM) unlocked by organizers if needed
+const ALL_GROUPS = [
   { id: 1, theme: 'FM' },
   { id: 2, theme: 'FM' },
   { id: 3, theme: 'AC' },
   { id: 4, theme: 'AC' },
   { id: 5, theme: 'IM' },
   { id: 6, theme: 'IM' },
+  { id: 7, theme: 'FM' },
+  { id: 8, theme: 'AC' },
+  { id: 9, theme: 'IM' },
 ];
 
-const GROUPS_BY_THEME = { FM: [1, 2], AC: [3, 4], IM: [5, 6] };
+const GROUPS_BY_THEME_BASE     = { FM: [1, 2],    AC: [3, 4],    IM: [5, 6]    };
+const GROUPS_BY_THEME_EXPANDED = { FM: [1, 2, 7], AC: [3, 4, 8], IM: [5, 6, 9] };
 
-// Max participants per group per session slot (~200 / 6 ≈ 34)
-const MAX_PER_GROUP = 34;
-
-// How much numerical imbalance we tolerate (in headcount) in order to
-// optimise for demographic diversity instead. Keeps groups roughly even
-// while still allowing the diversity criteria to make the final call.
+// Target ~20-25 people per group per session
+const MAX_PER_GROUP  = 25;
 const FILL_TOLERANCE = 2;
 
-let participants = [];
+let participants   = [];
+let groupsExpanded = false; // groups 7, 8, 9 locked by default
+
+function getGroupsByTheme() {
+  return groupsExpanded ? GROUPS_BY_THEME_EXPANDED : GROUPS_BY_THEME_BASE;
+}
 
 // ── Session counts (for capacity & numerical balance) ──────────────
 function sessionCounts() {
   const s1 = {}, s2 = {};
-  GROUPS.forEach(g => { s1[g.id] = 0; s2[g.id] = 0; });
+  ALL_GROUPS.forEach(g => { s1[g.id] = 0; s2[g.id] = 0; });
   participants.forEach(p => { s1[p.group1]++; s2[p.group2]++; });
   return { s1, s2 };
 }
@@ -62,10 +68,7 @@ function groupComposition(groupId) {
   return { comp, total };
 }
 
-// Returns a higher (less negative) score when the candidate's own traits
-// (commission, gender, legal system, seniority) are currently UNDER-represented
-// in this group — i.e. assigning them here would improve the group's balance.
-// This naturally converges towards the overall event-wide proportions.
+// Higher (less negative) score = candidate's traits are under-represented = preferred assignment
 function diversityScore(groupId, candidate) {
   const { comp, total } = groupComposition(groupId);
   if (total === 0) return 0;
@@ -77,11 +80,8 @@ function diversityScore(groupId, candidate) {
   return -(representation / total);
 }
 
-// Finds the best pair of groups (one per session) covering themeA and themeB.
-// Step 1 — keep only pairs that respect capacity AND stay close to the
-//          best numerical balance (within FILL_TOLERANCE).
-// Step 2 — among those, pick the pair that most improves demographic diversity.
 function findBestPair(themeA, themeB, s1, s2, candidate) {
+  const byTheme = getGroupsByTheme();
   const options = [];
   const collect = (groupsX, groupsY) => {
     for (const gx of groupsX) {
@@ -92,8 +92,8 @@ function findBestPair(themeA, themeB, s1, s2, candidate) {
       }
     }
   };
-  collect(GROUPS_BY_THEME[themeA], GROUPS_BY_THEME[themeB]);
-  collect(GROUPS_BY_THEME[themeB], GROUPS_BY_THEME[themeA]);
+  collect(byTheme[themeA], byTheme[themeB]);
+  collect(byTheme[themeB], byTheme[themeA]);
 
   if (options.length === 0) return null;
 
@@ -113,9 +113,6 @@ function assignGroups(candidate) {
   const [t1, t2, t3] = candidate.themeRanking;
   const { s1, s2 } = sessionCounts();
 
-  // Priority cascade: top-2 combo, then 1st+3rd, then 2nd+3rd.
-  // This guarantees that if a topic is under-subscribed, participants'
-  // 3rd choice still gets used to keep all groups adequately filled.
   const combos = [[t1, t2], [t1, t3], [t2, t3]];
   for (const [ta, tb] of combos) {
     const pair = findBestPair(ta, tb, s1, s2, candidate);
@@ -123,8 +120,9 @@ function assignGroups(candidate) {
   }
 
   // Absolute fallback: any valid pair of different themes
-  for (const ta of Object.keys(GROUPS_BY_THEME)) {
-    for (const tb of Object.keys(GROUPS_BY_THEME)) {
+  const byTheme = getGroupsByTheme();
+  for (const ta of Object.keys(byTheme)) {
+    for (const tb of Object.keys(byTheme)) {
       if (ta === tb) continue;
       const pair = findBestPair(ta, tb, s1, s2, candidate);
       if (pair) return pair;
@@ -165,8 +163,8 @@ app.post('/api/submit', (req, res) => {
     at: new Date().toISOString(),
   });
 
-  const g1 = GROUPS.find(g => g.id === assignment.g1);
-  const g2 = GROUPS.find(g => g.id === assignment.g2);
+  const g1 = ALL_GROUPS.find(g => g.id === assignment.g1);
+  const g2 = ALL_GROUPS.find(g => g.id === assignment.g2);
 
   res.json({
     group1: { id: g1.id, themeName: THEME_NAMES[g1.theme] },
@@ -176,17 +174,20 @@ app.post('/api/submit', (req, res) => {
 
 app.get('/api/stats', (req, res) => {
   const { s1, s2 } = sessionCounts();
+  const activeCount = groupsExpanded ? 9 : 6;
 
   res.json({
     total: participants.length,
-    maxTotal: MAX_PER_GROUP * GROUPS.length,
-    groups: GROUPS.map(g => ({
+    maxTotal: MAX_PER_GROUP * activeCount,
+    expanded: groupsExpanded,
+    groups: ALL_GROUPS.map(g => ({
       id: g.id,
       theme: g.theme,
       themeName: THEME_NAMES[g.theme],
       s1Count: s1[g.id],
       s2Count: s2[g.id],
       max: MAX_PER_GROUP,
+      active: groupsExpanded || g.id <= 6,
     })),
     breakdown: {
       gender: {
@@ -203,9 +204,9 @@ app.get('/api/stats', (req, res) => {
         'Civil Law':  participants.filter(p => p.commonLaw === 'no').length,
       },
       seniority: {
-        'Under 35':             participants.filter(p => p.seniority === 'junior').length,
-        '35 – 40':              participants.filter(p => p.seniority === 'mid').length,
-        '40+': participants.filter(p => p.seniority === 'senior').length,
+        'Under 35': participants.filter(p => p.seniority === 'junior').length,
+        '35 – 40':  participants.filter(p => p.seniority === 'mid').length,
+        '40+':      participants.filter(p => p.seniority === 'senior').length,
       },
       dancefloor: {
         'Less than 2h': participants.filter(p => p.dancefloor === 'low').length,
@@ -214,6 +215,12 @@ app.get('/api/stats', (req, res) => {
       },
     },
   });
+});
+
+// Toggle groups 7, 8, 9 on/off (organizer action)
+app.post('/api/toggle-expansion', (req, res) => {
+  groupsExpanded = !groupsExpanded;
+  res.json({ expanded: groupsExpanded });
 });
 
 app.post('/api/reset', (req, res) => {
