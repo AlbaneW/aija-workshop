@@ -108,16 +108,42 @@
       font-size: 0.82rem; font-weight: 700; cursor: pointer;
       white-space: nowrap; transition: background 0.15s;
     }
-    .btn-navy { background: var(--navy); color: white; }
+    .btn-navy   { background: var(--navy); color: white; }
     .btn-navy:hover { background: var(--navy-light); }
-    .btn-gold { background: var(--gold); color: white; }
+    .btn-gold   { background: var(--gold); color: white; }
     .btn-gold:hover { background: #b8943e; }
     .btn-danger { background: #DC2626; color: white; }
     .btn-danger:hover { background: #b91c1c; }
     .btn-outline { background: transparent; color: var(--navy); border: 1.5px solid var(--navy); }
     .btn-outline:hover { background: #EEF1F8; }
+    .btn-green  { background: #059669; color: white; }
+    .btn-green:hover { background: #047857; }
     .qr-hint { font-size: 0.78rem; color: var(--muted); margin-top: 12px; line-height: 1.5; }
     .qr-hint strong { color: var(--text); }
+
+    /* ── Expansion card ── */
+    .expansion-card {
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 22px;
+      margin-bottom: 16px;
+      background: var(--card);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+      transition: border-color 0.3s;
+    }
+    .expansion-card.expanded { border-color: #059669; }
+    .expansion-meta {
+      font-size: 0.82rem; color: var(--muted);
+      line-height: 1.6; margin-bottom: 16px;
+    }
+    .expansion-meta strong { color: var(--text); }
+    .expansion-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .expansion-status {
+      font-size: 0.82rem; font-weight: 600;
+      padding: 6px 12px; border-radius: 100px;
+    }
+    .expansion-status.locked { background: #F3F0EB; color: var(--muted); }
+    .expansion-status.active { background: #D1FAE5; color: #065F46; }
 
     /* ── Total counter ── */
     .total-box { display: flex; align-items: baseline; gap: 10px; margin-bottom: 14px; }
@@ -138,14 +164,24 @@
       font-size: 0.7rem; font-weight: 800; text-transform: uppercase;
       letter-spacing: 1px; color: var(--muted); margin-bottom: 10px;
     }
-    .topic-groups { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .topic-groups   { display: grid; grid-template-columns: 1fr 1fr;    gap: 10px; }
+    .topic-groups-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
 
     .group-chip {
       border: 1.5px solid var(--border); border-radius: 12px;
       padding: 14px 12px; text-align: center;
+      transition: opacity 0.3s, border-color 0.3s;
     }
-    .group-chip.s1-full { border-color: var(--gold); }
+    .group-chip.locked {
+      opacity: 0.45;
+      border-style: dashed;
+    }
     .group-chip-number { font-size: 1.8rem; font-weight: 900; color: var(--navy); line-height: 1; }
+    .group-chip.locked .group-chip-number { color: var(--muted); }
+    .group-locked-label {
+      font-size: 0.72rem; color: var(--muted);
+      margin-top: 8px; font-style: italic;
+    }
 
     .group-sessions { margin-top: 10px; display: flex; flex-direction: column; gap: 6px; }
     .session-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
@@ -237,6 +273,20 @@
     </div>
   </div>
 
+  <!-- Group Capacity Management -->
+  <div class="expansion-card" id="expansion-card">
+    <div class="card-title" style="margin-bottom:12px;">Group Capacity Management</div>
+    <p class="expansion-meta" id="expansion-meta">
+      <strong id="expand-active-count">6 groups</strong> active —
+      max capacity <strong id="expand-capacity">150</strong> participants (25 per group).<br>
+      Open groups 7, 8 &amp; 9 (one extra per topic) if you need more capacity.
+    </p>
+    <div class="expansion-row">
+      <button class="btn btn-green" id="expand-btn" onclick="toggleExpansion()">Open Groups 7, 8 &amp; 9</button>
+      <span class="expansion-status locked" id="expand-status">Groups 7, 8, 9 — locked</span>
+    </div>
+  </div>
+
   <div class="last-updated" id="last-updated">Refreshing…</div>
 
   <div class="grid-2">
@@ -321,28 +371,51 @@
   }
 
   function renderStats(data) {
-    const { total, maxTotal, groups, breakdown } = data;
+    const { total, maxTotal, groups, breakdown, expanded } = data;
 
-    // Total
+    // ── Expansion card ──
+    const activeCount = expanded ? 9 : 6;
+    document.getElementById('expand-active-count').textContent = activeCount + ' groups';
+    document.getElementById('expand-capacity').textContent = maxTotal;
+    const btn = document.getElementById('expand-btn');
+    const statusEl = document.getElementById('expand-status');
+    const expansionCard = document.getElementById('expansion-card');
+    if (expanded) {
+      btn.textContent = 'Close Groups 7, 8 & 9';
+      btn.className = 'btn btn-danger';
+      statusEl.textContent = 'Groups 7, 8, 9 — active';
+      statusEl.className = 'expansion-status active';
+      expansionCard.classList.add('expanded');
+    } else {
+      btn.textContent = 'Open Groups 7, 8 & 9';
+      btn.className = 'btn btn-green';
+      statusEl.textContent = 'Groups 7, 8, 9 — locked';
+      statusEl.className = 'expansion-status locked';
+      expansionCard.classList.remove('expanded');
+    }
+
+    // ── Total ──
     document.getElementById('stat-total').textContent = total;
     document.getElementById('total-bar').style.width  = pct(total, maxTotal) + '%';
 
-    // Groups by topic
+    // ── Groups by topic ──
     const topics = [
-      { theme: 'FM', ids: [1, 2] },
-      { theme: 'AC', ids: [3, 4] },
-      { theme: 'IM', ids: [5, 6] },
+      { theme: 'FM', ids: [1, 2, 7] },
+      { theme: 'AC', ids: [3, 4, 8] },
+      { theme: 'IM', ids: [5, 6, 9] },
     ];
 
     document.getElementById('groups-container').innerHTML = topics.map(topic => {
       const topicGroups = groups.filter(g => topic.ids.includes(g.id));
+      const gridClass = expanded ? 'topic-groups-3' : 'topic-groups';
       return `
         <div class="topic-section">
           <div class="topic-label">${THEME_NAMES[topic.theme]}</div>
-          <div class="topic-groups">
+          <div class="${gridClass}">
             ${topicGroups.map(g => `
-              <div class="group-chip">
+              <div class="group-chip ${g.active ? '' : 'locked'}">
                 <div class="group-chip-number">${g.id}</div>
+                ${g.active ? `
                 <div class="group-sessions">
                   <div class="session-row">
                     <div class="session-tag">Session 1</div>
@@ -358,13 +431,14 @@
                     </div>
                     <div class="session-count">${g.s2Count}/${g.max}</div>
                   </div>
-                </div>
+                </div>` : `
+                <div class="group-locked-label">locked</div>`}
               </div>`).join('')}
           </div>
         </div>`;
     }).join('');
 
-    // Breakdown
+    // ── Breakdown ──
     const { gender, commission, legalSystem, seniority, dancefloor } = breakdown;
     const sections = [
       {
@@ -392,13 +466,13 @@
       {
         title: 'Seniority',
         rows: [
-          { label: 'Under 35',             count: seniority['Under 35'],            cls: 'fill-teal'   },
-          { label: '35 – 40',              count: seniority['35 – 40'],             cls: 'fill-blue'   },
-          { label: '40+', count: seniority['40+'], cls: 'fill-purple' },
+          { label: 'Under 35', count: seniority['Under 35'], cls: 'fill-teal'   },
+          { label: '35 – 40',  count: seniority['35 – 40'],  cls: 'fill-blue'   },
+          { label: '40+',      count: seniority['40+'],      cls: 'fill-purple' },
         ],
       },
       {
-        title: 'Dancefloor last night 🕺',
+        title: 'Dancefloor forecast 🕺',
         rows: [
           { label: 'Less than 2h', count: dancefloor['Less than 2h'], cls: 'fill-green'  },
           { label: '2 – 4h',       count: dancefloor['2 – 4h'],       cls: 'fill-orange' },
@@ -421,6 +495,20 @@
       </div>`).join('');
   }
 
+  // ── Toggle expansion ───────────────────────────────────────────
+  async function toggleExpansion() {
+    try {
+      const res  = await fetch('/api/toggle-expansion', { method: 'POST' });
+      const data = await res.json();
+      showToast(data.expanded
+        ? 'Groups 7, 8 & 9 are now open — new participants will be assigned to them.'
+        : 'Groups 7, 8 & 9 are now closed.');
+      fetchStats();
+    } catch {
+      showToast('Error: could not update group settings.');
+    }
+  }
+
   // ── Reset ─────────────────────────────────────────────────────
   function confirmReset() {
     if (!confirm('Are you sure you want to delete ALL registrations? This cannot be undone.')) return;
@@ -434,7 +522,7 @@
     const el = document.getElementById('toast');
     el.textContent = msg;
     el.classList.add('show');
-    setTimeout(() => el.classList.remove('show'), 2800);
+    setTimeout(() => el.classList.remove('show'), 3200);
   }
 
   // ── Init ──────────────────────────────────────────────────────
